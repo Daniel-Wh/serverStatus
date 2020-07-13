@@ -1,4 +1,4 @@
-serversList = document.getElementById("serversList");
+let serverList = document.getElementById("serverList");
 
 const servers = [
   "view.clearcube.com",
@@ -10,6 +10,11 @@ const servers = [
 ];
 const serverIPs = [];
 
-window.addEventListener("load", loadServers);
+const loadServers = () => {
+  servers.forEach((val) => {
+    const markup = `<li>${val}</li>`;
+    serverList.insertAdjacentHTML("beforeend", markup);
+  });
+};
 
-const loadServers = () => {};
+window.addEventListener("load", loadServers);

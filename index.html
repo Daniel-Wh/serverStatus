@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Server Status</title>
-    <script src="script.js"></script>
+
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -17,14 +17,7 @@
     </div>
     <div class="servers" id="servers">
       <h2>Servers</h2>
-      <ul id="serversList">
-        <li>view.clearcube.com</li>
-        <li>cctaddc01.clearcube.local</li>
-        <li>m1.clearcube.local</li>
-        <li>m1-rds.clearcube.local</li>
-        <li>172.16.1.11</li>
-        <li>172.16.1.12</li>
-      </ul>
+      <ul id="serverList" class="serverList"></ul>
     </div>
     <div class="status" id="status">
       <h2>Status</h2>
@@ -37,5 +30,6 @@
         <li>Up since 2020-06-29 12:49</li>
       </ul>
     </div>
+    <script src="script.js"></script>
   </body>
 </html>

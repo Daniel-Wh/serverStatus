@@ -35,6 +35,7 @@
   max-width: 20%;
   top: 10vh;
   left: 20%;
+  float: left;
   padding-bottom: 10px;
   align-items: center;
 }
@@ -49,11 +50,27 @@
   list-style-type: none;
 }
 
+.servers li :hover {
+  cursor: pointer;
+}
+
 .status {
-  float: left;
-  display: flex;
   position: relative;
-  flex-direction: column;
-  align-items: center;
   max-width: 20%;
+  top: 10vh;
+  left: 40%;
+  float: left;
+  padding-bottom: 10px;
+  align-items: center;
+}
+
+.status h2 {
+  position: relative;
+  left: 20%;
+  margin-bottom: 10px;
+}
+.status li {
+  font-size: 20px;
+  margin-bottom: 10px;
+  list-style-type: none;
 }
