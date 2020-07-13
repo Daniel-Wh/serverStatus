@@ -1,5 +1,6 @@
 * {
   box-sizing: border-box;
+  display: relatives;
 }
 
 .header {
@@ -22,4 +23,37 @@
   top: 5vh;
   color: aliceblue;
   border-color: 1px rgba(0, 0, 0, 0.3);
+}
+
+.date {
+  position: absolute;
+  left: 30%;
+}
+
+.servers {
+  position: relative;
+  max-width: 20%;
+  top: 10vh;
+  left: 20%;
+  padding-bottom: 10px;
+  align-items: center;
+}
+.servers h2 {
+  position: relative;
+  left: 20%;
+  margin-bottom: 10px;
+}
+.servers li {
+  font-size: 20px;
+  margin-bottom: 10px;
+  list-style-type: none;
+}
+
+.status {
+  float: left;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  max-width: 20%;
 }
