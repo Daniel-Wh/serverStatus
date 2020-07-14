@@ -1,19 +1,19 @@
-from flask import Flask, render_template
-from time import sleep
+from flask import Flask, render_template, jsonify
+import json
 from threading import Timer
 from pythonping import ping
 from datetime import datetime as dt
 
 app = Flask(__name__)
 
-# serverIPs = ["172.16.1.43",
-#              "172.16.1.10",
-#              "172.16.1.40",
-#              "172.16.1.41",
-#              "172.16.1.11",
-#              "172.16.1.12", ]
+serverIPs = ["172.16.1.43",
+             "172.16.1.10",
+             "172.16.1.40",
+             "172.16.1.41",
+             "172.16.1.11",
+             "172.16.1.12", ]
 
-serverIPs = ["8.8.8.8", "172.16.1.43"]
+# serverIPs = ["8.8.8.8", "172.16.1.43"]
 servers = []
 current_time = dt.now()
 print(current_time.strftime("%b %d %Y %H:%M"))
@@ -30,6 +30,17 @@ def update_pings():
         new_server = Server(server)
         new_server.check_ping()
         servers.append(new_server)
+
+
+@app.route('/update', methods=['GET'])
+def update_front_end():
+    statuses = []
+    for server in servers:
+        statuses.append(server.get_current_status())
+
+    return jsonify({
+        "statuses": statuses
+    })
 
 
 class Server:
