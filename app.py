@@ -1,4 +1,6 @@
 from flask import Flask, render_template
+from time import sleep
+from threading import Timer
 from pythonping import ping
 from datetime import datetime as dt
 
@@ -12,40 +14,89 @@ app = Flask(__name__)
 #              "172.16.1.12", ]
 
 serverIPs = ["8.8.8.8", "172.16.1.43"]
-pingResponses = []
+servers = []
 current_time = dt.now()
 print(current_time.strftime("%b %d %Y %H:%M"))
 
+
 @app.route('/')
 def hello_world():
-
     return render_template('index.html')
+
 
 @app.before_first_request
 def update_pings():
     for server in serverIPs:
         new_server = Server(server)
         new_server.check_ping()
+        servers.append(new_server)
 
 
 class Server:
     time = 0
-    isUp = True
+    is_up = True
+    initialized = False
+    status_message = ""
 
     def __init__(self, ip):
         self.ip = ip
 
-    def update_time(self, time):
-        self.time = time
-
-    def update_status(self, status):
-        self.isUp = status
+    def get_current_status(self):
+        return self.status_message
 
     def check_ping(self):
-        obj = ping(self.ip, verbose=False, count=2, timeout=1)
-        print(obj)
+        obj = ping(self.ip, verbose=False, count=1, timeout=1)
+        if not self.initialized:
+            self.time = dt.now().strftime("%b %d %Y %H:%M")
+            self.initialized = True
+        for thing in obj:
+            for_comparison = str(thing)
+            if for_comparison == "Request timed out":
+                if self.is_up:
+                    self.time = dt.now().strftime("%b %d %Y %H:%M")
+                self.is_up = False
+                self.status_message = self.ip + " is dead and has been since " + self.time
+                print(self.status_message)
+            else:
+                if not self.is_up:
+                    self.time = dt.now().strftime("%b %d %Y %H:%M")
+                self.is_up = True
+                self.status_message = self.ip + " is alive and has been since " + self.time
+                print(self.status_message)
 
 
+def update_stored_pings(server_list):
+    for server in server_list:
+        server.check_ping()
+
+
+class RepeatedTimer(object):
+    def __init__(self, interval, function, *args, **kwargs):
+        self._timer = None
+        self.interval = interval
+        self.function = function
+        self.args = args
+        self.kwargs = kwargs
+        self.is_running = False
+        self.start()
+
+    def _run(self):
+        self.is_running = False
+        self.start()
+        self.function(*self.args, **self.kwargs)
+
+    def start(self):
+        if not self.is_running:
+            self._timer = Timer(self.interval, self._run)
+            self._timer.start()
+            self.is_running = True
+
+    def stop(self):
+        self._timer.cancel()
+        self.is_running = False
+
+
+rt = RepeatedTimer(60, update_stored_pings, servers)
 
 
 if __name__ == '__main__':

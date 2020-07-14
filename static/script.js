@@ -18,18 +18,18 @@ const serverIPs = [
   "172.16.1.12",
 ];
 
-async function loadServers() {
-  servers.forEach((val) => {
-    const markup = `<li>${val}</li>`;
-    serverList.insertAdjacentHTML("beforeend", markup);
-  });
-  serverIPs.forEach((val) => {
-    fetch(`http://${val}`)
-      .then((res) => console.log(res))
-      .catch((error) => {
-        console.log(error);
-      });
-  });
-}
+// async function loadServers() {
+//   servers.forEach((val) => {
+//     const markup = `<li>${val}</li>`;
+//     serverList.insertAdjacentHTML("beforeend", markup);
+//   });
+//   serverIPs.forEach((val) => {
+//     fetch(`http://${val}`)
+//       .then((res) => console.log(res))
+//       .catch((error) => {
+//         console.log(error);
+//       });
+//   });
+// }
 
 window.addEventListener("load", loadServers);
