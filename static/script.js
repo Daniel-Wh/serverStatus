@@ -10,6 +10,8 @@ const servers = [
   "172.16.1.12",
 ];
 
+let statuses = [];
+
 async function loadServers() {
   servers.forEach((val) => {
     const markup = `<li>${val}</li>`;
@@ -21,10 +23,15 @@ async function loadServers() {
 }
 
 const updateStatusList = (serverStatus) => {
-  console.log("update status list called");
-  console.log(serverStatus);
   serverStatus.forEach((val) => {
-    const markup = `<li>${val}</li>`;
+    const deadOrAlive = val[0];
+    let markup = "";
+    if (deadOrAlive == "A") {
+      markup = `<li class="alive">${val}</li>`;
+    } else {
+      markup = `<li class="dead">${val}</li>`;
+    }
+
     statusList.insertAdjacentHTML("beforeend", markup);
   });
 };

@@ -11,7 +11,8 @@ serverIPs = ["172.16.1.43",
              "172.16.1.40",
              "172.16.1.41",
              "172.16.1.11",
-             "172.16.1.12", ]
+             "172.16.1.12",
+             "8.8.8.8"]
 
 # serverIPs = ["8.8.8.8", "172.16.1.43"]
 servers = []
@@ -66,13 +67,13 @@ class Server:
                 if self.is_up:
                     self.time = dt.now().strftime("%b %d %Y %H:%M")
                 self.is_up = False
-                self.status_message = "Dead and has been since " + self.time
+                self.status_message = "Dead since " + self.time
                 print(self.status_message)
             else:
                 if not self.is_up:
                     self.time = dt.now().strftime("%b %d %Y %H:%M")
                 self.is_up = True
-                self.status_message = "Alive and has been since " + self.time
+                self.status_message = "Alive since " + self.time
                 print(self.status_message)
 
 
