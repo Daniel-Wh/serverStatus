@@ -1,5 +1,53 @@
 const serverList = document.getElementById("serverList");
 const statusList = document.getElementById("statusList");
+const dateHeader = document.getElementById("date");
+
+const now = new Date();
+
+const days = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
+const dayName = days[now.getDay()];
+
+const months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+const month = months[now.getMonth()];
+let day = now.getDate();
+switch (now.getDate()) {
+  case 1:
+    day += "st";
+    break;
+  case 2:
+    day += "nd";
+    break;
+  case 3:
+    day += "rd";
+    break;
+  default:
+    day += "th";
+    break;
+}
+const time = now.getHours() + ":" + now.getMinutes();
+
+const fullDate = `${dayName} the ${day} of ${month} ${now.getFullYear()} ${time}`;
 
 const servers = [
   "view.clearcube.com",
@@ -8,11 +56,13 @@ const servers = [
   "m1-rds.clearcube.local",
   "172.16.1.11",
   "172.16.1.12",
+  "8.8.8.8",
 ];
 
 let statuses = [];
 
 async function loadServers() {
+  dateHeader.innerText = fullDate;
   servers.forEach((val) => {
     const markup = `<li>${val}</li>`;
     serverList.insertAdjacentHTML("beforeend", markup);

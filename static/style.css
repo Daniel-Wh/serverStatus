@@ -41,12 +41,13 @@
 }
 .servers h2 {
   position: relative;
+  font-size: 36px;
   left: 30%;
   margin-bottom: 10px;
 }
 .servers li {
-  font-size: 20px;
-  margin-bottom: 10px;
+  font-size: 24px;
+  margin-bottom: 12px;
   list-style-type: none;
 }
 
@@ -66,12 +67,13 @@
 
 .status h2 {
   position: relative;
+  font-size: 36px;
   left: 35%;
   margin-bottom: 10px;
 }
 .status li {
   padding: 2px 2px;
-  font-size: 18px;
+  font-size: 22px;
   margin-bottom: 10px;
   list-style-type: none;
 }
