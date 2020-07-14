@@ -1,4 +1,5 @@
-let serverList = document.getElementById("serverList");
+const serverList = document.getElementById("serverList");
+const statusList = document.getElementById("statusList");
 
 const servers = [
   "view.clearcube.com",
@@ -9,27 +10,22 @@ const servers = [
   "172.16.1.12",
 ];
 
-const serverIPs = [
-  "172.16.1.43",
-  "172.16.1.10",
-  "172.16.1.40",
-  "172.16.1.41",
-  "172.16.1.11",
-  "172.16.1.12",
-];
+async function loadServers() {
+  servers.forEach((val) => {
+    const markup = `<li>${val}</li>`;
+    serverList.insertAdjacentHTML("beforeend", markup);
+  });
+  await fetch("http://127.0.0.1:5000/update", { method: "GET" })
+    .then((response) => response.json())
+    .then((data) => updateStatusList(data.statuses));
+}
 
-// async function loadServers() {
-//   servers.forEach((val) => {
-//     const markup = `<li>${val}</li>`;
-//     serverList.insertAdjacentHTML("beforeend", markup);
-//   });
-//   serverIPs.forEach((val) => {
-//     fetch(`http://${val}`)
-//       .then((res) => console.log(res))
-//       .catch((error) => {
-//         console.log(error);
-//       });
-//   });
-// }
-
+const updateStatusList = (serverStatus) => {
+  console.log("update status list called");
+  console.log(serverStatus);
+  serverStatus.forEach((val) => {
+    const markup = `<li>${val}</li>`;
+    statusList.insertAdjacentHTML("beforeend", markup);
+  });
+};
 window.addEventListener("load", loadServers);

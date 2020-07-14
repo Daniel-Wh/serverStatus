@@ -66,13 +66,13 @@ class Server:
                 if self.is_up:
                     self.time = dt.now().strftime("%b %d %Y %H:%M")
                 self.is_up = False
-                self.status_message = self.ip + " is dead and has been since " + self.time
+                self.status_message = "Dead and has been since " + self.time
                 print(self.status_message)
             else:
                 if not self.is_up:
                     self.time = dt.now().strftime("%b %d %Y %H:%M")
                 self.is_up = True
-                self.status_message = self.ip + " is alive and has been since " + self.time
+                self.status_message = "Alive and has been since " + self.time
                 print(self.status_message)
 
 
