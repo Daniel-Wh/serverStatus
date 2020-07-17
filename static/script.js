@@ -45,7 +45,13 @@ switch (now.getDate()) {
     day += "th";
     break;
 }
-const time = now.getHours() + ":" + now.getMinutes();
+let minutes;
+if (now.getMinutes() < 10) {
+  minutes = "0" + now.getMinutes();
+} else {
+  minutes = now.getMinutes();
+}
+const time = now.getHours() + ":" + minutes;
 
 const fullDate = `${dayName} the ${day} of ${month} ${now.getFullYear()} ${time}`;
 
