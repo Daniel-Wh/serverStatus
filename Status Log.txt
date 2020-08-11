@@ -70,4 +70,19 @@
  Monitor Started atAug 11 2020 12:43172.16.1.43 went down at Aug 11 2020 12:48172.16.1.10 went down at Aug 11 2020 12:48172.16.1.40 went down at Aug 11 2020 12:48172.16.1.41 went down at Aug 11 2020 12:48172.16.1.11 went down at Aug 11 2020 12:48192.168.0.11 went down at Aug 11 2020 12:48
  
  ************************************************************* 
- Monitor Started atAug 11 2020 12:48
+ Monitor Started atAug 11 2020 12:48172.16.1.43 went down at Aug 11 2020 13:12172.16.1.10 went down at Aug 11 2020 13:12172.16.1.40 went down at Aug 11 2020 13:13172.16.1.41 went down at Aug 11 2020 13:13172.16.1.11 went down at Aug 11 2020 13:13192.168.0.11 went down at Aug 11 2020 13:13
+ 
+ ************************************************************* 
+ Monitor Started atAug 11 2020 13:12172.16.1.43 went down at Aug 11 2020 16:12172.16.1.10 went down at Aug 11 2020 16:12172.16.1.40 went down at Aug 11 2020 16:12172.16.1.41 went down at Aug 11 2020 16:12172.16.1.11 went down at Aug 11 2020 16:13192.168.0.11 went down at Aug 11 2020 16:13
+ 
+ ************************************************************* 
+ Monitor Started atAug 11 2020 16:12172.16.1.43 went down at Aug 11 2020 16:13172.16.1.10 went down at Aug 11 2020 16:13172.16.1.40 went down at Aug 11 2020 16:13172.16.1.41 went down at Aug 11 2020 16:13172.16.1.11 went down at Aug 11 2020 16:13192.168.0.11 went down at Aug 11 2020 16:14
+ 
+ ************************************************************* 
+ Monitor Started atAug 11 2020 16:13172.16.1.43 went down at Aug 11 2020 16:15172.16.1.10 went down at Aug 11 2020 16:15172.16.1.40 went down at Aug 11 2020 16:15172.16.1.41 went down at Aug 11 2020 16:15172.16.1.11 went down at Aug 11 2020 16:15192.168.0.11 went down at Aug 11 2020 16:15
+ 
+ ************************************************************* 
+ Monitor Started atAug 11 2020 16:15172.16.1.43 went down at Aug 11 2020 16:16172.16.1.10 went down at Aug 11 2020 16:16172.16.1.40 went down at Aug 11 2020 16:16172.16.1.41 went down at Aug 11 2020 16:16172.16.1.11 went down at Aug 11 2020 16:16192.168.0.11 went down at Aug 11 2020 16:17
+ 
+ ************************************************************* 
+ Monitor Started atAug 11 2020 16:16

@@ -1,8 +1,11 @@
 const serverList = document.getElementById("serverList");
 const statusList = document.getElementById("statusList");
 const dateHeader = document.getElementById("date");
+const portStatus = document.getElementById("port-status");
 
 const now = new Date();
+
+const server_ports = ["80", "139", "443", "3389", "8080", "8443"];
 
 const days = [
   "Sunday",
@@ -65,17 +68,26 @@ const servers = [
   "8.8.8.8",
 ];
 
+let serverElements = [];
+
 let statuses = [];
+let port_stats;
 
 async function loadServers() {
   dateHeader.innerText = fullDate;
-  servers.forEach((val) => {
-    const markup = `<li>${val}</li>`;
+  servers.forEach((val, index) => {
+    const markup = `<li id="${index}">${val}</li>`;
     serverList.insertAdjacentHTML("beforeend", markup);
+    const serverEl = document.getElementById(index);
+    serverElements.push(serverEl);
   });
   await fetch("http://127.0.0.1:5000/update", { method: "GET" })
     .then((response) => response.json())
-    .then((data) => updateStatusList(data.statuses));
+    .then((data) => {
+      port_stats = data.ports;
+      updateStatusList(data.statuses);
+    });
+  addServerElEvents();
 }
 
 const updateStatusList = (serverStatus) => {
@@ -92,3 +104,35 @@ const updateStatusList = (serverStatus) => {
   });
 };
 window.addEventListener("load", loadServers);
+// set up event listeners for server list
+
+const addServerElEvents = () => {
+  serverElements.forEach((val) => {
+    val.addEventListener("click", () => {
+      createModal(val.id);
+    });
+  });
+};
+
+const createModal = (index) => {
+  let markUp = `<div class="port-list">
+                  <ul>
+                  <li>Ports</li>
+                    `;
+  port_stats[index].forEach((val, index) => {
+    markUp +=
+      `<li ` +
+      (val === 0 ? `class="dead-port"` : `class="active-port"`) +
+      `>${server_ports[index]}</li>`;
+  });
+  markUp += `</ul>
+  </div>`;
+  portStatus.classList.add("port-status");
+  portStatus.insertAdjacentHTML("beforeend", markUp);
+  setTimeout(() => {
+    while (portStatus.firstChild) {
+      portStatus.removeChild(portStatus.firstChild);
+    }
+    portStatus.classList.remove("port-status");
+  }, 3500);
+};
