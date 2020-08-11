@@ -78,8 +78,9 @@ def update_front_end():
     port_stats = []
     for server in servers:
         statuses.append(server.get_current_status())
+        print(server.get_ip())
+        print(server.get_port_stats())
         port_stats.append(server.get_port_stats())
-    #port_stats.clear()
 
     return jsonify({
         "statuses": statuses,
@@ -90,22 +91,22 @@ def update_front_end():
 
 class Server:
     server_ports = [80, 139, 443, 3389, 8080, 8443]
-    time = 0
-    is_up = True
-    #port_open = False
-    initialized = False
-    status_message = ""
-    port_stats = []
+    
 
     BUFFER_SIZE = 2
     #TCP_MSG = b'1'
 
 
     def __init__(self, ip):
+        self.time = 0
+        self.is_up = True
+        self.initialized = False
+        self.status_message = ""
+        self.port_stats = []
         self.ip = ip
 
     def get_ip(self): 
-        return self.ip
+        return str(self.ip)
 
     def get_current_status(self):
         return self.status_message
@@ -127,15 +128,11 @@ class Server:
                 self.port_stats.append(0)
                 #print("port " + str(port) + " is closed")
             else:
-                #if self.is_up:
                 port_open = True
                 self.port_stats.append(1)
-                #s.send(self.TCP_MSG)
-                #data = s.recv(self.BUFFER_SIZE)
                 s.close()
-                #print("connected successfully")
 
-
+        print(self.port_stats)
         obj = ping(self.ip, verbose=False, count=1, timeout=1)
         if not self.initialized:
             self.time = dt.now().strftime("%b %d %Y %H:%M")
@@ -157,30 +154,6 @@ class Server:
                     file_log.write(self.ip + " came back at " + self.time)
                 self.is_up = True
                 self.status_message = "Alive since " + self.time
-
-        
-
-        #s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # self.port_stats.clear()
-        # port_open = False
-        # for port in server_ports:
-        #     #print("trying port " + str(port) + " at " + self.ip)
-        #     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        #     s.settimeout(0.1)
-        #     try:
-        #         s.connect((self.ip, port))
-        #     except:
-        #         self.port_stats.append(0)
-        #         #print("port " + str(port) + " is closed")
-        #     else:
-        #         #if self.is_up:
-        #         port_open = True
-        #         self.port_stats.append(1)
-        #         #s.send(self.TCP_MSG)
-        #         #data = s.recv(self.BUFFER_SIZE)
-        #         s.close()
-        #         #print("connected successfully")
-
 
 
             
