@@ -14,7 +14,7 @@ serverIPs = ["172.16.1.43",
              "172.16.1.41",
              "172.16.1.11",
              "172.16.1.12",
-             "8.8.8.1"]
+             "8.8.8.8"]
 
 servernames = ["view.clearcube.com", 
                "cctaddc01.clearcube.local",
@@ -76,6 +76,7 @@ def update_front_end():
     for server in servers:
         statuses.append(server.get_current_status())
         port_stats.append(server.get_port_stats())
+    #port_stats.clear()
 
     return jsonify({
         "statuses": statuses,
@@ -132,9 +133,11 @@ class Server:
                 self.is_up = True
                 self.status_message = "Alive since " + self.time
 
-                self.port_stats.clear()
+        self.port_stats.clear()
 
         #s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        
+
         for port in server_ports:
             #print("trying port " + str(port) + " at " + self.ip)
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
