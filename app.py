@@ -1,4 +1,5 @@
 from flask import Flask, render_template, jsonify
+from flask_cors import CORS
 import json
 import socket
 import webbrowser
@@ -7,6 +8,8 @@ from pythonping import ping
 from datetime import datetime as dt
 
 app = Flask(__name__)
+CORS(app)
+
 
 serverIPs = ["172.16.1.43",
              "172.16.1.10",
