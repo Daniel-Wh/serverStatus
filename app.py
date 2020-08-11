@@ -13,7 +13,7 @@ serverIPs = ["172.16.1.43",
              "172.16.1.40",
              "172.16.1.41",
              "172.16.1.11",
-             "172.16.1.12",
+             "192.168.0.11",
              "8.8.8.8"]
 
 servernames = ["view.clearcube.com", 
@@ -86,6 +86,7 @@ def update_front_end():
 
 
 class Server:
+    server_ports = [80, 139, 443, 3389, 8080, 8443]
     time = 0
     is_up = True
     #port_open = False
@@ -111,6 +112,27 @@ class Server:
 
     def check_ping(self):
         file_log = open("Status Log.txt", "a+") 
+        self.port_stats.clear()
+        port_open = False
+        for port in server_ports:
+            #print("trying port " + str(port) + " at " + self.ip)
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.settimeout(0.1)
+            try:
+                s.connect((self.ip, port))
+            except:
+                self.port_stats.append(0)
+                #print("port " + str(port) + " is closed")
+            else:
+                #if self.is_up:
+                port_open = True
+                self.port_stats.append(1)
+                #s.send(self.TCP_MSG)
+                #data = s.recv(self.BUFFER_SIZE)
+                s.close()
+                #print("connected successfully")
+
+
         obj = ping(self.ip, verbose=False, count=1, timeout=1)
         if not self.initialized:
             self.time = dt.now().strftime("%b %d %Y %H:%M")
@@ -118,7 +140,7 @@ class Server:
         for thing in obj:
             for_comparison = str(thing)
             #print(for_comparison)
-            if for_comparison == "Request timed out":
+            if for_comparison == "Request timed out" and not port_open:
                 if self.is_up:
                     self.time = dt.now().strftime("%b %d %Y %H:%M")
                     print("updating log")
@@ -133,27 +155,28 @@ class Server:
                 self.is_up = True
                 self.status_message = "Alive since " + self.time
 
-        self.port_stats.clear()
-
-        #s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         
 
-        for port in server_ports:
-            #print("trying port " + str(port) + " at " + self.ip)
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.settimeout(0.1)
-            try:
-                s.connect((self.ip, port))
-            except:
-                self.port_stats.append(0)
-                #print("port " + str(port) + " is closed")
-            else:
-                #if self.is_up:
-                self.port_stats.append(1)
-                #s.send(self.TCP_MSG)
-                #data = s.recv(self.BUFFER_SIZE)
-                s.close()
-                #print("connected successfully")
+        #s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        # self.port_stats.clear()
+        # port_open = False
+        # for port in server_ports:
+        #     #print("trying port " + str(port) + " at " + self.ip)
+        #     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        #     s.settimeout(0.1)
+        #     try:
+        #         s.connect((self.ip, port))
+        #     except:
+        #         self.port_stats.append(0)
+        #         #print("port " + str(port) + " is closed")
+        #     else:
+        #         #if self.is_up:
+        #         port_open = True
+        #         self.port_stats.append(1)
+        #         #s.send(self.TCP_MSG)
+        #         #data = s.recv(self.BUFFER_SIZE)
+        #         s.close()
+        #         #print("connected successfully")
 
 
 
