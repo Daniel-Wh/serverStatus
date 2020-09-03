@@ -105,12 +105,17 @@ def add_server():
         params = request.json
 
         ip = params['ip']
-        serverIPs.append(ip)
-        name = params['name']
-        servernames.append(name)
-        after_server_added(name)
-        return 'Server Added Successfully', 200
-
+        if ip not in serverIPs:
+            servers_file = open(serversFile, 'w')
+            servers_file.write(ip)
+            servers_file.close()
+            serverIPs.append(ip)
+            name = params['name']
+            servernames.append(name)
+            after_server_added(name)
+            return 'Server Added Successfully', 200
+        else:
+            return 'Server already being checked', 201
     except:
         return 'System Error', 500
 
