@@ -39,7 +39,7 @@ current_time = dt.now()
 print(current_time.strftime("%b %d %Y %H:%M"))
 #controller = webbrowser.get('chrome')
 #controller.open('172.0.0.1:5000')
-webbrowser.open('http://127.0.0.1:5000')
+# webbrowser.open('http://127.0.0.1:5000')
 
 
 @app.route('/')
@@ -56,6 +56,7 @@ def update_pings():
     file_log.write(current_time.strftime("%b %d %Y %H:%M"))
 
     print("updated log")
+    print(serverIPs)
     for server in serverIPs:
         new_server = Server(server)
         new_server.check_ping()
@@ -198,4 +199,4 @@ rt = RepeatedTimer(60, update_stored_pings, servers)
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=5050, debug=True)
