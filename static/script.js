@@ -81,7 +81,7 @@ async function loadServers() {
     const serverEl = document.getElementById(index);
     serverElements.push(serverEl);
   });
-  await fetch("http://127.0.0.1:5000/update", { method: "GET" })
+  await fetch("/update", { method: "GET" })
     .then((response) => response.json())
     .then((data) => {
       port_stats = data.ports;
