@@ -23,15 +23,10 @@ servernames = ["view.clearcube.com",
 
 server_ports = [80, 139, 443, 3389, 8080, 8443]
 
-
-
-# serverIPs = ["8.8.8.8", "172.16.1.43"]
 servers = []
 current_time = dt.now()
 print(current_time.strftime("%b %d %Y %H:%M"))
-#controller = webbrowser.get('chrome')
-#controller.open('172.0.0.1:5000')
-# webbrowser.open('http://127.0.0.1:5000')
+webbrowser.open('http://127.0.0.1:5000')
 
 
 @app.route('/')
@@ -103,10 +98,10 @@ def update_front_end():
 def add_server():
     try:
         params = request.json
-
         ip = params['ip']
         if ip not in serverIPs:
-            servers_file = open(serversFile, 'w')
+            servers_file = open(serversFile, 'a')
+            servers_file.write("\n")
             servers_file.write(ip)
             servers_file.close()
             serverIPs.append(ip)
@@ -126,11 +121,21 @@ def remove_server():
         params = request.json
 
         ip = params['ip']
+        if ip not in serverIPs:
+            return "Server not being tracked", 201
+
         serverIPs.remove(ip)
+        file = open(serversFile, 'w')
+        file.write('')
+        for server in serverIPs[:-1]:
+            file.write(server)
+            file.write('\n')
+        file.write(serverIPs[len(serverIPs)-1])
+        file.close()
         servers.clear()
-        update_pings()
+        after_server_added(ip)
         return 'Server removed Successfully', 200
-    except:
+    except RuntimeError:
         return 'System Error', 500
 
 
@@ -186,6 +191,7 @@ class Server:
                 if self.is_up:
                     self.time = dt.now().strftime("%b %d %Y %H:%M")
                     print("updating log")
+                    file_log.write("\n")
                     file_log.write(self.ip + " went down at " + self.time)
                 self.is_up = False
                 self.status_message = "Dead since " + self.time
@@ -193,6 +199,7 @@ class Server:
             else:
                 if not self.is_up:
                     self.time = dt.now().strftime("%b %d %Y %H:%M")
+                    file_log.write("\n")
                     file_log.write(self.ip + " came back at " + self.time)
                 self.is_up = True
                 self.status_message = "Alive since " + self.time
