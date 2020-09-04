@@ -13,13 +13,15 @@ When the front end is loaded through a browser it will refresh every minute as w
 
 Added a text file logging system <br/>
 Updated UI to reflect which ports are up <br/>
+Added sqlite database for server info <br/>
+Added endpoints to remove and add server <br/>
 
 ## Client requests
 
 Dynamically adjust which servers are being monitored at UI
 <br />
-Visual log of uptime and recent changes
+Visual log of uptime and recent changes on page (clickable to expand, not necessarily on page all the time)
 <br />
-text log to maintain historical information
+database to maintain historical downtime information on servers
 <br />
-Report on completion of automated tasks (freenas and m1 backup)
+Using a different pi to gather temp/humidity info of server and display using graph (Likely going to use Bokeh)
