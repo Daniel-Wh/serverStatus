@@ -4,3 +4,4 @@ __pycache__/app.cpython-37.pyc
 /__pycache__
 status log.txt
 test.db
+/node_modules
