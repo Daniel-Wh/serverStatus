@@ -5,3 +5,4 @@ __pycache__/app.cpython-37.pyc
 status log.txt
 test.db
 /node_modules
+.vscode/settings.json

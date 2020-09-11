@@ -38,11 +38,10 @@ body {
 }
 .btn-container {
   position: absolute;
-  height: 36px;
-  width: 110px;
-  margin-left: 21%;
-  margin-top: 90px;
-
+  height: 30px;
+  width: 40px;
+  margin-left: 15%;
+  margin-top: 138px;
 }
 .add-server-btn {
   position: relative;
@@ -62,6 +61,8 @@ body {
   cursor: pointer;
 }
 .btn-container .add-server-btn p {
+  font-size: 26px;
+  font-weight: 600;
   height: 100%;
   width: 100%;
 }

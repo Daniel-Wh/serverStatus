@@ -64,7 +64,7 @@ const time = now.getHours() + ":" + minutes;
 
 const fullDate = `${dayName} the ${day} of ${month} ${now.getFullYear()} ${time}`;
 
-const servers = [
+let servers = [
   "view.clearcube.com",
   "cctaddc01.clearcube.local",
   "m1.clearcube.local",
@@ -80,7 +80,17 @@ let statuses = [];
 let port_stats;
 
 async function loadServers() {
-  dateHeader.innerText = fullDate;
+  servers = [];
+  await fetch("/servers", { method: "GET" })
+    .then((response) => response.json())
+    .then((data) => {
+      servers = data.servers;
+      updateServerUI();
+    });
+  addServerElEvents();
+}
+
+async function updateServerUI() {
   servers.forEach((val, index) => {
     const markup = `<li id="${index}">${val}</li>`;
     serverList.insertAdjacentHTML("beforeend", markup);
@@ -93,10 +103,11 @@ async function loadServers() {
       port_stats = data.ports;
       updateStatusList(data.statuses);
     });
-  addServerElEvents();
 }
 
 async function getUpdate() {
+  statusList.innerHTML = "";
+  dateHeader.innerText = fullDate;
   await fetch("/update", { method: "GET" })
     .then((response) => response.json())
     .then((data) => {
@@ -106,6 +117,7 @@ async function getUpdate() {
 }
 
 const updateStatusList = (serverStatus) => {
+  statusList.innerHTML = "";
   serverStatus.forEach((val) => {
     const deadOrAlive = val[0];
     let markup = "";
@@ -118,6 +130,7 @@ const updateStatusList = (serverStatus) => {
     statusList.insertAdjacentHTML("beforeend", markup);
   });
 };
+
 window.addEventListener("load", loadServers);
 // set up event listeners for server list
 
@@ -162,9 +175,49 @@ closeAddServerModal.addEventListener("click", () => {
 
 serverSubmit.addEventListener("click", () => {
   const input = serverInput.value;
+  if (input) {
+    servers.push(input);
+    addServerReq(input);
+  }
   console.log(input);
 });
 
 setInterval(() => {
   getUpdate();
 }, 60000);
+
+function addServerReq(server) {
+  // const response = postServer("/addServer", { ip: `${server}` });
+  addServer({ ip: `${"" + server}` });
+  // console.log(response);
+  // serverContainer.classList.toggle("show");
+  // serverInput.value = "";
+}
+
+async function addServer(server) {
+  await fetch("/addServer", {
+    method: "POST",
+    body: JSON.stringify(server),
+    headers: {
+      "Content-Type": "application/json",
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  })
+    .then((response) => {
+      console.log(response);
+      if (response.status == 201) {
+        alert(`We're already watching this server`);
+      } else if (response.status == 200) {
+        serverContainer.classList.toggle("show");
+        serverInput.value = "";
+        servers.push(server.ip);
+        serverList.innerHTML = "";
+        loadServers();
+      } else if (response.status == 500) {
+        alert("something went wrong, please reach out to the administrator");
+      }
+    })
+    .then((data) => {
+      console.log(data);
+    });
+}

@@ -9,6 +9,7 @@ from datetime import datetime as dt
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 CORS(app)
 
@@ -41,23 +42,25 @@ def index():
 def initialize_state():
     db.create_all()
     global initialized
+    current_servers = Server.get_current_servers()
+    if len(current_servers) > 0:
+        initialized = True
     file_log = open("Status Log.txt", "a+")
     file_log.write("\n \n ************************************************************* \n Monitor Started at")
     file_log.write(current_time.strftime("%b %d %Y %H:%M"))
+    servers_file = open(serversFile, 'r')
+    ips = servers_file.readlines()
+    servers_file.close()
+    for ip in ips[:-1]:
+        serverIPs.append(ip[:-1])
+    serverIPs.append(ips[len(ips) - 1])
     # take base servers and add them to database
     if not initialized:
-        servers_file = open(serversFile, 'r')
-        ips = servers_file.readlines()
-        servers_file.close()
         initialized = True
-        for ip in ips[:-1]:
-            serverIPs.append(ip[:-1])
-
-        serverIPs.append(ips[len(ips) - 1])
-    for server in serverIPs:
-        new_server = Server(server)
-        new_server.check_ping()
-        new_server.save_to_db()
+        for server in serverIPs:
+            new_server = Server(server)
+            new_server.check_ping()
+            new_server.save_to_db()
 
 
 def update_log(servername, message):
@@ -78,6 +81,18 @@ def start_log():
     file_log.write("\n")
     print("updated log")
     file_log.close()
+
+
+@app.route('/servers', methods=['GET'])
+def return_servers():
+    server_list = Server.get_current_servers()
+    server_ips = []
+    for server in server_list:
+        server_ips.append(server.get_ip())
+
+    return jsonify({
+        "servers": server_ips,
+    }), 200
 
 
 @app.route('/update', methods=['GET'])
