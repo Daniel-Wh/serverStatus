@@ -2,6 +2,12 @@ const serverList = document.getElementById("serverList");
 const statusList = document.getElementById("statusList");
 const dateHeader = document.getElementById("date");
 const portStatus = document.getElementById("port-status");
+const closeAddServerModal = document.getElementById("modal-cls-btn");
+const serverContainer = document.getElementById("server-container");
+const addServerContainer = document.getElementById("add-server-btn");
+const serverForm = document.getElementById("server-form");
+const serverInput = document.getElementById("server-input");
+const serverSubmit = document.getElementById("server-submit");
 
 const now = new Date();
 
@@ -90,6 +96,15 @@ async function loadServers() {
   addServerElEvents();
 }
 
+async function getUpdate() {
+  await fetch("/update", { method: "GET" })
+    .then((response) => response.json())
+    .then((data) => {
+      port_stats = data.ports;
+      updateStatusList(data.statuses);
+    });
+}
+
 const updateStatusList = (serverStatus) => {
   serverStatus.forEach((val) => {
     const deadOrAlive = val[0];
@@ -136,3 +151,20 @@ const createModal = (index) => {
     portStatus.classList.remove("port-status");
   }, 3500);
 };
+
+addServerContainer.addEventListener("click", () => {
+  serverContainer.classList.toggle("show");
+});
+
+closeAddServerModal.addEventListener("click", () => {
+  serverContainer.classList.toggle("show");
+});
+
+serverSubmit.addEventListener("click", () => {
+  const input = serverInput.value;
+  console.log(input);
+});
+
+setInterval(() => {
+  getUpdate();
+}, 60000);

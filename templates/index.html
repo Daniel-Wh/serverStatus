@@ -6,8 +6,7 @@
     <title>Server Status</title>
 
     <link rel="stylesheet" href="static/style.css" />
-    <link rel="shortcut icon" href="/static/favicon.ico" />
-    <meta http-equiv="refresh" content="60" />
+    <link rel="shortcut icon" href="static/favicon.ico" />
   </head>
   <body>
     <header id="header" class="header">
@@ -32,21 +31,25 @@
         <li>Up since 2020-06-29 12:49</li> -->
       </ul>
     </div>
-    <div id="port-status">
-      <!-- <div class="port-list">
-        <ul>
-          <li>Ports</li>
-          <li>80</li>
-          <li>139</li>
-          <li>443</li>
-          <li>3389</li>
-          <li>8080</li>
-          <li>8443</li>
-        </ul>
-      </div> -->
+    <div class="btn-container">
+      <div class="add-server-btn" id="add-server-btn">
+        <p>+ Add Server</p>
+      </div>
     </div>
-    <script src="/static/script.js"></script>
+    <div id="port-status"></div>
+    <div class="add-container" id="server-container">
+      <div class="close-btn" id="modal-cls-btn">X</div>
+      <h2>Enter the server to add</h2>
+      <form id="server-form">
+        <input
+          type="text"
+          name="server"
+          id="server-input"
+          placeholder="Server"
+        />
+        <input type="button" value="Submit" id="server-submit" />
+      </form>
+    </div>
+    <script src="static/script.js"></script>
   </body>
 </html>
-
-<!-- "80", "139", "443", "3389", "8080", "8443" -->
