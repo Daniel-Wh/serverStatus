@@ -13,6 +13,8 @@ const now = new Date();
 
 const server_ports = ["80", "139", "443", "3389", "8080", "8443"];
 
+const removeIcon = `<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="far" data-icon="times-circle" class="svg-inline--fa fa-times-circle fa-w-16" role="img" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200zm101.8-262.2L295.6 256l62.2 62.2c4.7 4.7 4.7 12.3 0 17l-22.6 22.6c-4.7 4.7-12.3 4.7-17 0L256 295.6l-62.2 62.2c-4.7 4.7-12.3 4.7-17 0l-22.6-22.6c-4.7-4.7-4.7-12.3 0-17l62.2-62.2-62.2-62.2c-4.7-4.7-4.7-12.3 0-17l22.6-22.6c4.7-4.7 12.3-4.7 17 0l62.2 62.2 62.2-62.2c4.7-4.7 12.3-4.7 17 0l22.6 22.6c4.7 4.7 4.7 12.3 0 17z"/></svg>`;
+
 const days = [
   "Sunday",
   "Monday",
@@ -92,7 +94,7 @@ async function loadServers() {
 
 async function updateServerUI() {
   servers.forEach((val, index) => {
-    const markup = `<li id="${index}">${val}</li>`;
+    const markup = `<div class="server-remove" id="server-${index}"><li id="${index}">${val}</li><span id="span-${index}">⨉</span></div>`;
     serverList.insertAdjacentHTML("beforeend", markup);
     const serverEl = document.getElementById(index);
     serverElements.push(serverEl);
@@ -105,11 +107,21 @@ async function updateServerUI() {
     });
 
   serverElements.forEach((server) => {
+    const serverRemoveSpan = document.getElementById(`span-${server.id}`);
+
     server.addEventListener("mouseover", () => {
       document.getElementById(server.id).classList.toggle("server-focus");
+      document.getElementById(`span-${server.id}`).style.display = "block";
     });
+
     server.addEventListener("mouseout", () => {
       document.getElementById(server.id).classList.toggle("server-focus");
+      setTimeout(() => {
+        document.getElementById(`span-${server.id}`).style.display = "none";
+      }, 2000);
+    });
+    serverRemoveSpan.addEventListener("click", () => {
+      console.log("remove server: " + server.id);
     });
   });
 }

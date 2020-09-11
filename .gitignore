@@ -6,3 +6,4 @@ status log.txt
 test.db
 /node_modules
 .vscode/settings.json
+.vscode

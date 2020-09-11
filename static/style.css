@@ -78,6 +78,7 @@ body {
   float: left;
   padding-bottom: 10px;
   align-items: center;
+  justify-content: center;
 }
 .servers h2 {
   position: relative;
@@ -90,6 +91,24 @@ body {
   margin-bottom: 12px;
   list-style-type: none;
   border-radius: 5px;
+}
+
+.server-remove span {
+  display: none;
+  float: right;
+  position: relative;
+  color: #2988c9;
+  border-radius: 50%;
+  border-color: solid 2px #2988c9;
+  margin-top: -38px;
+  margin-right: -50px;
+  height: 35px;
+  width: 35px;
+  padding: 2px 2px;
+  text-align: center;
+}
+.server-remove span:hover {
+  cursor: pointer;
 }
 
 .servers li :hover {
