@@ -8,12 +8,13 @@ const addServerContainer = document.getElementById("add-server-btn");
 const serverForm = document.getElementById("server-form");
 const serverInput = document.getElementById("server-input");
 const serverSubmit = document.getElementById("server-submit");
-
+const serverWarningText = document.getElementById("server-warning-text");
+const removeWarningContainer = document.getElementById("remove-container");
+const yesRemoveServer = document.getElementById("yes-remove-server");
+const noRemoveServer = document.getElementById("no-remove-server");
 const now = new Date();
 
 const server_ports = ["80", "139", "443", "3389", "8080", "8443"];
-
-const removeIcon = `<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="far" data-icon="times-circle" class="svg-inline--fa fa-times-circle fa-w-16" role="img" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200zm101.8-262.2L295.6 256l62.2 62.2c4.7 4.7 4.7 12.3 0 17l-22.6 22.6c-4.7 4.7-12.3 4.7-17 0L256 295.6l-62.2 62.2c-4.7 4.7-12.3 4.7-17 0l-22.6-22.6c-4.7-4.7-4.7-12.3 0-17l62.2-62.2-62.2-62.2c-4.7-4.7-4.7-12.3 0-17l22.6-22.6c4.7-4.7 12.3-4.7 17 0l62.2 62.2 62.2-62.2c4.7-4.7 12.3-4.7 17 0l22.6 22.6c4.7 4.7 4.7 12.3 0 17z"/></svg>`;
 
 const days = [
   "Sunday",
@@ -83,6 +84,7 @@ let port_stats;
 
 async function loadServers() {
   servers = [];
+  serverList.innerHTML = "";
   await fetch("/servers", { method: "GET" })
     .then((response) => response.json())
     .then((data) => {
@@ -121,8 +123,33 @@ async function updateServerUI() {
       }, 2000);
     });
     serverRemoveSpan.addEventListener("click", () => {
-      console.log("remove server: " + server.id);
+      removeWarningContainer.classList.toggle("show");
+      serverWarningText.innerText = `Are you sure you want to remove: ${
+        servers[server.id]
+      }`;
+      yesRemoveServer.addEventListener("click", removeServer(server.id));
+      noRemoveServer.addEventListener("click", () => {
+        removeWarningContainer.classList.toggle("show");
+      });
     });
+  });
+}
+
+async function removeServer(serverIndex) {
+  console.log("remove server: " + servers[serverIndex]);
+
+  await fetch("/removeServer", {
+    method: "POST",
+    body: JSON.stringify({ ip: "" + servers[serverIndex] }),
+    headers: {
+      "Content-Type": "application/json",
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  }).then((response) => {
+    if (response.status == 200) {
+      removeWarningContainer.classList.toggle("show");
+      loadServers();
+    }
   });
 }
 
