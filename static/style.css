@@ -40,8 +40,8 @@ body {
   position: absolute;
   height: 30px;
   width: 40px;
-  margin-left: 15%;
-  margin-top: 138px;
+  left: 15%;
+  top: 36vh;
 }
 .add-server-btn {
   position: relative;
@@ -59,6 +59,9 @@ body {
 }
 .btn-container .add-server-btn:hover {
   cursor: pointer;
+}
+.add-server-btn-focus {
+  border: 2px solid #0b476e;
 }
 .btn-container .add-server-btn p {
   font-size: 26px;
@@ -86,10 +89,18 @@ body {
   font-size: 24px;
   margin-bottom: 12px;
   list-style-type: none;
+  border-radius: 5px;
 }
 
 .servers li :hover {
   cursor: pointer;
+}
+
+.server-focus {
+  background-color: darkgray;
+  perspective: 1000px;
+  font-weight: bold;
+  color: #fefefe;
 }
 
 .status {
@@ -181,6 +192,7 @@ body {
   z-index: -1;
   background-color: rgba(41, 136, 201, 0.95);
   border-top: 2px solid #eee;
+  color: #fefefe;
   display: flex;
   flex-direction: column;
   align-items: center;

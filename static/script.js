@@ -103,6 +103,15 @@ async function updateServerUI() {
       port_stats = data.ports;
       updateStatusList(data.statuses);
     });
+
+  serverElements.forEach((server) => {
+    server.addEventListener("mouseover", () => {
+      document.getElementById(server.id).classList.toggle("server-focus");
+    });
+    server.addEventListener("mouseout", () => {
+      document.getElementById(server.id).classList.toggle("server-focus");
+    });
+  });
 }
 
 async function getUpdate() {
@@ -221,3 +230,10 @@ async function addServer(server) {
       console.log(data);
     });
 }
+
+addServerContainer.addEventListener("mouseover", () => {
+  addServerContainer.classList.toggle("add-server-btn-focus");
+});
+addServerContainer.addEventListener("mouseout", () => {
+  addServerContainer.classList.toggle("add-server-btn-focus");
+});
