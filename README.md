@@ -2,11 +2,11 @@
 
 Simple flask app with front end that provides ping updates for various servers.
 <br />
-To use, fork repo, replace ip address in flask app and Javascript list.
+To use, fork repo, replace ips in text file
 <br />
-Run the flask app in development mode and every minute the online status will be updated in the flask app.
+Run the flask 
 <br />
-When the front end is loaded through a browser it will refresh every minute as well.
+When the front end is loaded through a browser it will refresh the page's content each minute
 <br />
 
 ## Recent Updates
@@ -16,11 +16,12 @@ Updated UI to reflect which ports are up <br/>
 Added sqlite database for server info <br/>
 Added endpoints to remove and add server <br/>
 Added temperature and humidity logging system from node.js for pi 4, application will ultimately be placed in server room and will monitor temps <br/>
+Dynamically adjust which servers are being monitored at UI
+<br />
 
 ## Client requests
 
-Dynamically adjust which servers are being monitored at UI
-<br />
+
 Visual log of uptime and recent changes on page (clickable to expand, not necessarily on page all the time)
 <br />
 database to maintain historical downtime information on servers
