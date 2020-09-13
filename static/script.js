@@ -16,6 +16,9 @@ const now = new Date();
 
 const server_ports = ["80", "139", "443", "3389", "8080", "8443"];
 
+let state = {
+}
+
 const days = [
   "Sunday",
   "Monday",
@@ -84,17 +87,20 @@ let port_stats;
 
 async function loadServers() {
   servers = [];
+  serverElements =[]
   serverList.innerHTML = "";
   await fetch("/servers", { method: "GET" })
     .then((response) => response.json())
     .then((data) => {
       servers = data.servers;
       updateServerUI();
+      addServerElEvents();
     });
-  addServerElEvents();
+  
 }
 
 async function updateServerUI() {
+  
   servers.forEach((val, index) => {
     const markup = `<div class="server-remove" id="server-${index}"><li id="${index}">${val}</li><span id="span-${index}">⨉</span></div>`;
     serverList.insertAdjacentHTML("beforeend", markup);
@@ -108,11 +114,16 @@ async function updateServerUI() {
       updateStatusList(data.statuses);
     });
 
+    
   serverElements.forEach((server) => {
     const serverRemoveSpan = document.getElementById(`span-${server.id}`);
-
+    
     server.addEventListener("mouseover", () => {
       document.getElementById(server.id).classList.toggle("server-focus");
+      state.serverIndex = server.id
+      serverWarningText.innerText = `Are you sure you want to remove: ${
+        servers[state.serverIndex]
+      }`;
       document.getElementById(`span-${server.id}`).style.display = "block";
     });
 
@@ -124,23 +135,21 @@ async function updateServerUI() {
     });
     serverRemoveSpan.addEventListener("click", () => {
       removeWarningContainer.classList.toggle("show");
-      serverWarningText.innerText = `Are you sure you want to remove: ${
-        servers[server.id]
-      }`;
-      yesRemoveServer.addEventListener("click", removeServer(server.id));
-      noRemoveServer.addEventListener("click", () => {
-        removeWarningContainer.classList.toggle("show");
-      });
     });
   });
 }
 
-async function removeServer(serverIndex) {
-  console.log("remove server: " + servers[serverIndex]);
+yesRemoveServer.addEventListener("click", removeServer);
+noRemoveServer.addEventListener("click", () => {
+  removeWarningContainer.classList.toggle("show");
+});
+
+async function removeServer() {
+
 
   await fetch("/removeServer", {
     method: "POST",
-    body: JSON.stringify({ ip: "" + servers[serverIndex] }),
+    body: JSON.stringify({ ip: "" + servers[state.serverIndex] }),
     headers: {
       "Content-Type": "application/json",
       // 'Content-Type': 'application/x-www-form-urlencoded',
@@ -227,7 +236,7 @@ serverSubmit.addEventListener("click", () => {
     servers.push(input);
     addServerReq(input);
   }
-  console.log(input);
+
 });
 
 setInterval(() => {
@@ -252,13 +261,12 @@ async function addServer(server) {
     },
   })
     .then((response) => {
-      console.log(response);
+
       if (response.status == 201) {
         alert(`We're already watching this server`);
       } else if (response.status == 200) {
         serverContainer.classList.toggle("show");
         serverInput.value = "";
-        servers.push(server.ip);
         serverList.innerHTML = "";
         loadServers();
       } else if (response.status == 500) {
@@ -266,7 +274,7 @@ async function addServer(server) {
       }
     })
     .then((data) => {
-      console.log(data);
+
     });
 }
 
