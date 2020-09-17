@@ -12,63 +12,68 @@ const serverWarningText = document.getElementById("server-warning-text");
 const removeWarningContainer = document.getElementById("remove-container");
 const yesRemoveServer = document.getElementById("yes-remove-server");
 const noRemoveServer = document.getElementById("no-remove-server");
-const now = new Date();
+
 
 const server_ports = ["80", "139", "443", "3389", "8080", "8443"];
 
 let state = {
 }
 
-const days = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-];
-const dayName = days[now.getDay()];
 
-const months = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-const month = months[now.getMonth()];
-let day = now.getDate();
-switch (now.getDate()) {
-  case 1:
-    day += "st";
-    break;
-  case 2:
-    day += "nd";
-    break;
-  case 3:
-    day += "rd";
-    break;
-  default:
-    day += "th";
-    break;
-}
-let minutes;
-if (now.getMinutes() < 10) {
-  minutes = "0" + now.getMinutes();
-} else {
-  minutes = now.getMinutes();
-}
-const time = now.getHours() + ":" + minutes;
 
-const fullDate = `${dayName} the ${day} of ${month} ${now.getFullYear()} ${time}`;
+const getFullDate = ()=>{
+  const now = new Date();
+  const days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  const dayName = days[now.getDay()];
+  
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const month = months[now.getMonth()];
+  let day = now.getDate();
+  switch (now.getDate()) {
+    case 1:
+      day += "st";
+      break;
+    case 2:
+      day += "nd";
+      break;
+    case 3:
+      day += "rd";
+      break;
+    default:
+      day += "th";
+      break;
+  }
+  let minutes;
+  if (now.getMinutes() < 10) {
+    minutes = "0" + now.getMinutes();
+  } else {
+    minutes = now.getMinutes();
+  }
+  const time = now.getHours() + ":" + minutes;
+  
+  return fullDate = `${dayName} the ${day} of ${month} ${now.getFullYear()} ${time}`;
+}
 
 let servers = [
   "view.clearcube.com",
@@ -86,6 +91,7 @@ let statuses = [];
 let port_stats;
 
 async function loadServers() {
+  dateHeader.innerText = getFullDate();
   servers = [];
   serverElements =[]
   serverList.innerHTML = "";

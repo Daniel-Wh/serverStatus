@@ -338,3 +338,62 @@ body {
   text-align: center;
   vertical-align: middle;
 }
+
+.log-section::before {
+  content: " ";
+  display: block;
+  float: left;
+  height: 2px;
+  width: 80%;
+  margin-left: 10%;
+  background-color: #2988c9;
+  
+}
+
+.log-section {
+  left: 0;
+  width: 50%;
+  margin: 0;
+  padding: 0;
+  min-width: 40%;
+  position: absolute;
+  top: 75%;
+}
+
+.log-text ul {
+  list-style-type: none;
+  margin: 0;
+  width: 90%;
+  margin-left: 5%;
+}
+
+.log-text ul li {
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
+  font-size: 26px;
+}
+.log-text ul li span {
+  margin: auto auto;
+  border-radius: 5px;
+  padding: 5px 0;
+  vertical-align: center;
+}
+.log-text ul li p {
+  margin: 0;
+  padding: 5px 0;
+  vertical-align: center;
+  float: right;
+}
+
+.up{
+  width: 78px;
+  text-align: center;
+  background-color: rgba(13, 224, 13, 0.945);
+}
+
+.down{
+  width: 78px;
+  text-align: center;
+  background-color: rgba(255, 1, 1, 0.801);
+}

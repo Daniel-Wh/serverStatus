@@ -14,7 +14,7 @@ const getTemps = async ()=>{
   console.log(date)
   console.log(vals)
   
-  fs.appendFile(`${__dirname}/readings.txt`, `${dateForText} ${vals.temp} ${vals.humi} \n`, (err) => {
+  fs.appendFile(`${__dirname}/readings.txt`, `${dateForText} ${vals.temp} ${vals.humi}\n`, (err) => {
     if(err){
       console.log(err)
       }
