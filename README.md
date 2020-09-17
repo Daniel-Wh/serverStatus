@@ -2,7 +2,9 @@
 
 Simple flask app with front end that provides ping updates for various servers.
 <br />
-To use, fork repo, replace ips in text file
+To use, fork repo, replace ips in text file, open a terminal in the directory and run pip install -r requirements.txt, you will also need to run NPM install to get the packages for the temperature reading.
+<br /> 
+The application can run without temperature input if you're just interested in getting internal ip connection logs
 <br />
 Run the flask 
 <br />
