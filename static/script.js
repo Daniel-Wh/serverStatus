@@ -12,6 +12,7 @@ const serverWarningText = document.getElementById("server-warning-text");
 const removeWarningContainer = document.getElementById("remove-container");
 const yesRemoveServer = document.getElementById("yes-remove-server");
 const noRemoveServer = document.getElementById("no-remove-server");
+const logTextList = document.getElementById("log-text-list")
 
 
 const server_ports = ["80", "139", "443", "3389", "8080", "8443"];
@@ -117,6 +118,8 @@ async function updateServerUI() {
     .then((response) => response.json())
     .then((data) => {
       console.log(data.text_logs)
+      state.textLogs = data.text_logs
+      updateTextLogs()
       port_stats = data.ports;
       updateStatusList(data.statuses);
     });
@@ -145,6 +148,40 @@ async function updateServerUI() {
     });
   });
 }
+
+const updateTextLogs = ()=>{
+  logTextList.innerHTML = ''
+  let markUp
+  state.textLogs.forEach((log, index) =>{
+    if(index < 8){
+      status = log.split(' ')[2]
+    switch(status){
+      case 'added':
+        markUp = `<li><span class="added">add</span><p>${log}</p></li>`
+        break;
+      case 'removed':
+        markUp = `<li><span class="removed">remove</span><p>${log}</p></li>`
+        break;
+      case 'started':
+        // markup for server started
+        markUp = `<li><span class="monitor">start</span><p>${log}</p></li>`
+        break;
+      case 'came':
+        // markup for serve online
+        markUp = `<li><span class="up">up</span><p>${log}</p></li>`
+        break
+      case 'went':
+        //markup for server went down
+        markUp = `<li><span class="down">down</span><p>${log}</p></li>`
+        break
+    }
+    logTextList.insertAdjacentHTML('beforeend', markUp)
+    }
+    
+    
+  })
+}
+
 
 yesRemoveServer.addEventListener("click", removeServer);
 noRemoveServer.addEventListener("click", () => {

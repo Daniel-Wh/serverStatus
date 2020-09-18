@@ -44,7 +44,7 @@ def initialize_state():
     current_servers = Server.get_current_servers()
     if len(current_servers) > 0:
         initialized = True
-    start_log()
+    update_text_log("Monitor", "started")
     servers_file = open(serversFile, 'r')
     ips = servers_file.readlines()
     servers_file.close()
@@ -61,26 +61,16 @@ def initialize_state():
 
 
 def update_text_log(server_name, message):
-    file_log = open("Status Log.txt", "a+")
-    file_log.writelines("Server {} {} at {}\n".format(server_name, message,
-                                                      current_time.strftime("%b %d %Y %H:%M")))
+    file_log = open("Status Log.txt", "r")
+    dummy_file = open("dummy.txt", "w")
+    dummy_file.writelines("Server {} {} at {}\n".format(server_name, message,
+                                                        current_time.strftime("%b %d %Y %H:%M")))
+    for line in file_log:
+        dummy_file.write(line)
+    dummy_file.close()
     file_log.close()
-
-
-def update_log(servername, message):
-    file_log = open("Status Log.txt", "a+")
-    file_log.writelines("Server {} {} at {}\n".format(servername, message,
-                                                      current_time.strftime("%b %d %Y %H:%M")))
-    file_log.close()
-    server_list = Server.get_current_servers()
-    for server in server_list:
-        server.check_ping()
-
-
-def start_log():
-    file_log = open("Status Log.txt", "a+")
-    file_log.writelines("Monitor Started at {}\n".format(current_time.strftime("%b %d %Y %H:%M")))
-    file_log.close()
+    os.remove('Status Log.txt')
+    os.rename("dummy.txt", "Status Log.txt")
 
 
 @app.route('/servers', methods=['GET'])
@@ -135,7 +125,7 @@ def add_server():
         servers_file.write("\n")
         servers_file.write(ip)
         servers_file.close()
-        update_log(ip, "added")
+        update_text_log(ip, "added")
         return 'Server Added Successfully', 200
 
     except:
@@ -151,7 +141,7 @@ def remove_server():
         for server in current_servers:
             if ip == server.get_ip():
                 server.delete_from_db()
-                update_log(ip, "removed")
+                update_text_log(ip, "removed")
                 file = open(serversFile, 'w')
                 for ip in current_servers[:-2]:
                     file.write(str(ip.get_ip()))
@@ -239,7 +229,6 @@ class Server(db.Model):
         return server_list
 
     def check_ping(self):
-        file_log = open("Status Log.txt", "a+")
         self.port_stats = ''
         port_open = False
         for port in server_ports:
@@ -288,7 +277,6 @@ class Server(db.Model):
         # print(self.ip)
         # print(self.port_stats)
         # print(self.status_message)
-        file_log.close()
 
 
 def update_stored_pings():
