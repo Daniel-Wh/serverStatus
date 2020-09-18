@@ -116,6 +116,7 @@ async function updateServerUI() {
   await fetch("/update", { method: "GET" })
     .then((response) => response.json())
     .then((data) => {
+      console.log(data.text_logs)
       port_stats = data.ports;
       updateStatusList(data.statuses);
     });

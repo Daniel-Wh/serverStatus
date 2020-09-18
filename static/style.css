@@ -362,9 +362,7 @@ body {
 
 .log-text ul {
   list-style-type: none;
-  margin: 0;
-  width: 90%;
-  margin-left: 5%;
+  margin-left: -150px;
 }
 
 .log-text ul li {

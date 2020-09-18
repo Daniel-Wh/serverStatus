@@ -6,6 +6,7 @@ import webbrowser
 from threading import Timer
 from pythonping import ping
 from datetime import datetime as dt
+import os
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
@@ -16,7 +17,7 @@ CORS(app)
 serversFile = 'servers.txt'
 serverIPs = []
 initialized = False
-servernames = ["view.clearcube.com", 
+servernames = ["view.clearcube.com",
                "cctaddc01.clearcube.local",
                "m1.clearcube.local",
                "m1-rds.clearcube.local",
@@ -24,9 +25,7 @@ servernames = ["view.clearcube.com",
                "cctstorage.clearcube.local",
                "Google DNS Server"]
 
-
 server_ports = [80, 139, 443, 3389, 8080, 8443]
-
 
 current_time = dt.now()
 print(current_time.strftime("%b %d %Y %H:%M"))
@@ -45,9 +44,7 @@ def initialize_state():
     current_servers = Server.get_current_servers()
     if len(current_servers) > 0:
         initialized = True
-    file_log = open("Status Log.txt", "a+")
-    file_log.write("\n \n ************************************************************* \n Monitor Started at")
-    file_log.write(current_time.strftime("%b %d %Y %H:%M"))
+    start_log()
     servers_file = open(serversFile, 'r')
     ips = servers_file.readlines()
     servers_file.close()
@@ -63,23 +60,26 @@ def initialize_state():
             new_server.save_to_db()
 
 
+def update_text_log(server_name, message):
+    file_log = open("Status Log.txt", "a+")
+    file_log.writelines("Server {} {} at {}\n".format(server_name, message,
+                                                      current_time.strftime("%b %d %Y %H:%M")))
+    file_log.close()
+
+
 def update_log(servername, message):
     file_log = open("Status Log.txt", "a+")
-    file_log.write("\n \n ************************************************************* \n "
-                   "Server {} {} at ".format(servername, message))
-    file_log.write(current_time.strftime("%b %d %Y %H:%M"))
+    file_log.writelines("Server {} {} at {}\n".format(servername, message,
+                                                      current_time.strftime("%b %d %Y %H:%M")))
+    file_log.close()
     server_list = Server.get_current_servers()
     for server in server_list:
         server.check_ping()
 
 
 def start_log():
-    print("opening log")
-    file_log = open("Status Log.txt", "a+") 
-    file_log.write("\n \n ************************************************************* \n Monitor Started at ")
-    file_log.write(current_time.strftime("%b %d %Y %H:%M"))
-    file_log.write("\n")
-    print("updated log")
+    file_log = open("Status Log.txt", "a+")
+    file_log.writelines("Monitor Started at {}\n".format(current_time.strftime("%b %d %Y %H:%M")))
     file_log.close()
 
 
@@ -99,16 +99,23 @@ def return_servers():
 def update_front_end():
     statuses = []
     port_stats = []
+    log_texts = []
     server_list = Server.get_current_servers()
+    file = open("Status Log.txt", "r")
+    for i, line in enumerate(file):
+        if i < 16:
+            log_texts.append(line)
+        else:
+            break
+    file.close()
     for server in server_list:
         statuses.append(server.get_current_status())
         port_stats.append(server.get_port_stats())
 
-    print(statuses)
-    print(port_stats)
     return jsonify({
         "statuses": statuses,
-        "ports": port_stats
+        "ports": port_stats,
+        "text_logs": log_texts
     })
 
 
@@ -124,7 +131,7 @@ def add_server():
 
         new_server = Server(ip)
         new_server.save_to_db()
-        servers_file = open(serversFile, 'a')
+        servers_file = open(serversFile, 'a+')
         servers_file.write("\n")
         servers_file.write(ip)
         servers_file.close()
@@ -199,7 +206,7 @@ class Server(db.Model):
         db.session.delete(self)
         db.session.commit()
 
-    def get_ip(self): 
+    def get_ip(self):
         return str(self.ip)
 
     def get_current_status(self):
@@ -232,7 +239,7 @@ class Server(db.Model):
         return server_list
 
     def check_ping(self):
-        file_log = open("Status Log.txt", "a+") 
+        file_log = open("Status Log.txt", "a+")
         self.port_stats = ''
         port_open = False
         for port in server_ports:
@@ -264,19 +271,17 @@ class Server(db.Model):
             # print(for_comparison)
             if for_comparison == "Request timed out" and not port_open:
                 if self.is_up:
-                    print("server was up but now is down")
                     self.last_state_change = dt.now()
-                    # print("updating log")
-                    file_log.write("\n")
-                    file_log.write(self.ip + " went down at " + self.last_state_change.strftime("%b %d %Y %H:%M"))
+                    update_text_log(self.ip + "", "went down")
+            # file_log.write(self.ip + " went down at {}\n".format(self.last_state_change.strftime("%b %d %Y %H:%M")))
                 self.is_up = False
                 self.status_message = "Dead since " + self.last_state_change.strftime("%b %d %Y %H:%M")
                 self.save_to_db()
             else:
                 if not self.is_up:
                     self.last_state_change = dt.now()
-                    file_log.write("\n")
-                    file_log.write(self.ip + " came back at " + self.last_state_change.strftime("%b %d %Y %H:%M"))
+                    update_text_log(self.ip + "", "came back")
+            # file_log.write(self.ip + " came back at {}\n".format(self.last_state_change.strftime("%b %d %Y %H:%M")))
                 self.is_up = True
                 self.status_message = "Alive since " + self.last_state_change.strftime("%b %d %Y %H:%M")
                 self.save_to_db()
@@ -319,7 +324,6 @@ class RepeatedTimer(object):
 
 
 rt = RepeatedTimer(60, update_stored_pings)
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5050, debug=True)
