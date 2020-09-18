@@ -345,6 +345,7 @@ body {
   float: left;
   height: 2px;
   width: 80%;
+  margin-bottom: 20px;
   margin-left: 10%;
   background-color: #2988c9;
   
@@ -352,10 +353,10 @@ body {
 
 .log-section {
   left: 0;
-  width: 50%;
-  margin: 0;
+  width: 40%;
+  margin: 10px 0;
   padding: 0;
-  min-width: 40%;
+  margin-left: 20px;
   position: absolute;
   top: 75%;
 }
@@ -363,11 +364,19 @@ body {
 .log-text ul {
   list-style-type: none;
   margin-left: -150px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch; /* Default */
+  width: 100%;
+
+  margin: 0;
+  padding: 0;
 }
 
 .log-text ul li {
-  display: flex;
-  width: 100%;
+  display: block;
+    flex: 0 1 auto; /* Default */
+    list-style-type: none;
   justify-content: space-evenly;
   font-size: 26px;
 }
@@ -380,22 +389,22 @@ body {
 }
 .log-text ul li p {
   float: right;
+  width: auto;
+  text-align: center;
+  font-size: 26px;
   margin: 0;
   padding: 5px 0;
   vertical-align: center;
-  float: right;
 }
 
 .up{
   width: 78px;
-  margin-right: -105px;
   text-align: center;
   background-color: rgba(13, 224, 13, 0.945);
 }
 
 .down{
   width: 78px;
-  margin-right: -110px;
   text-align: center;
   background-color: rgba(255, 1, 1, 0.801);
 }
@@ -408,12 +417,10 @@ body {
 
 .added {
   width: 78px;
-  margin-right: -55px;
   text-align: center;
   background-color: cadetblue;
 }
 .removed {
-  margin-right: -90px;
   width: 78px;
   text-align: center;
   background-color: rgba(255, 1, 1, 0.562);
