@@ -457,6 +457,7 @@ body {
 .temp-box h2, .humidity-box h2{
   width: auto;
   font-size: 42px;
+  white-space: nowrap;
   text-align: center;
 }
 
