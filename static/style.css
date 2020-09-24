@@ -428,3 +428,46 @@ body {
   text-align: center;
   background-color: rgba(255, 1, 1, 0.562);
 }
+.tempSection {
+  width: auto;
+  float: right;
+  position: absolute;
+  right: 2%;
+  bottom: 5%;
+}
+
+.temp-box {
+  width: auto;
+  height: auto;
+  float: left;
+  margin-right: 100px;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  flex-direction: column;
+  border-radius: 5px;
+  vertical-align: middle;
+}
+.good-temp {
+  color: rgba(13, 224, 13, 0.945);
+}
+.bad-temp {
+  background-color: rgba(255, 1, 1, 0.801);
+}
+.temp-box h2, .humidity-box h2{
+  width: auto;
+  font-size: 42px;
+  text-align: center;
+}
+
+.humidity-box{
+  height: auto;
+  width: 233px;
+  float: right;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  flex-direction: column;
+  border-radius: 5px;
+  vertical-align: middle;
+}

@@ -220,7 +220,7 @@ async function getUpdate() {
     .then((data) => {
       port_stats = data.ports;
       state.textLogs = data.text_logs
-      state.temp = temp
+      state.temp = data.temp
       updateStatusList(data.statuses);
       updateTextLogs()
       updateTemp()
@@ -228,9 +228,28 @@ async function getUpdate() {
 }
 
 const updateTemp = () => {
-  temperature.innerText = state.temp.temp
-  humidity.innerText = state.temp.hum
-}
+  temperature.innerText = state.temp.temp + `° F`
+  humidity.innerText = state.temp.hum + `%`
+  console.log(parseFloat(state.temp.temp))
+  if(parseFloat(state.temp.temp) > 80.0){
+    temperature.classList.remove("good-temp")
+    temperature.classList.add("bad-temp")
+  }
+  else {
+    console.log("good temp class added")
+    temperature.classList.remove("bad-temp")
+    temperature.classList.add("good-temp")
+  }
+  if(parseFloat(state.temp.hum) > 60){
+    humidity.classList.add('bad-temp')
+    humidity.classList.remove('good-temp')
+  }
+  else{
+    humidity.classList.add('good-temp')
+    humidity.classList.remove('bad-temp')
+  }
+  }
+
 
 const updateStatusList = (serverStatus) => {
   statusList.innerHTML = "";
