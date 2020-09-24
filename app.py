@@ -156,6 +156,23 @@ def remove_server():
         return 'System Error', 500
 
 
+@app.route('/reset', methods=['GET'])
+def reset_backend():
+    try:
+        current_servers = Server.get_current_servers()
+        for server in current_servers:
+            server.delete_from_db()
+
+        global initialized, serverIPs
+        initialized = False
+        serverIPs = []
+        initialize_state()
+        update_text_log("Monitor", "reset")
+
+        return 'removed all servers from database and reset', 200
+    except:
+        return 500
+
 # ------------------------------------------------------------------- #
 # ------------- Server Class and database integration --------------- #
 # ------------------------------------------------------------------- #
@@ -185,7 +202,7 @@ class Server(db.Model):
     def get_port_stats(self):
         int_list = []
         for x in self.port_stats[1:].split(','):
-            int_list.append(int(x))
+            int_list.append(x)
         return int_list
 
     def save_to_db(self):
