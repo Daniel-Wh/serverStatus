@@ -13,7 +13,7 @@ body {
 
 .header {
   position: relative;
-  height: 20vh;
+  height: 15vh;
   display: flex;
   margin: 10px 10px;
   background-color: #2988c9;
@@ -23,12 +23,13 @@ body {
 }
 .header img {
   border-radius: 5px;
+  width: auto;
 }
 .header h1 {
   display: inline;
   position: absolute;
   left: 40%;
-  top: 5vh;
+  top:25%;
   color: aliceblue;
 }
 
@@ -37,14 +38,14 @@ body {
   left: 30%;
 }
 .btn-container {
-  position: absolute;
+  float: right;
+  margin-left: 10px;
+  margin-top: 10px;
   height: 30px;
   width: 40px;
-  left: 15%;
-  top: 36vh;
+  
 }
 .add-server-btn {
-  position: relative;
   text-align: center;
   background-color: #2988c9;
   color: #fefefe;
@@ -73,8 +74,8 @@ body {
 .servers {
   position: relative;
   max-width: 20%;
-  top: 10vh;
-  left: 5%;
+  margin-top: 2%;
+  margin-left: 3%;
   float: left;
   padding-bottom: 10px;
   align-items: center;
@@ -88,7 +89,7 @@ body {
 }
 .servers li {
   font-size: 24px;
-  margin-bottom: 12px;
+  margin-bottom: 15px;
   list-style-type: none;
   border-radius: 5px;
 }
@@ -125,8 +126,8 @@ body {
 .status {
   position: relative;
   max-width: 30%;
-  top: 10vh;
-  left: 15%;
+  margin-top: 2%;
+  margin-left: 40px;
   float: left;
   padding-bottom: 10px;
   align-items: center;
@@ -138,9 +139,12 @@ body {
   left: 35%;
   margin-bottom: 10px;
 }
+.status ul{
+  /* margin-top: -0.5px; */
+}
 .status li {
   padding: 2px 2px;
-  font-size: 22px;
+  font-size: 24px;
   margin-bottom: 10px;
   list-style-type: none;
 }
@@ -358,7 +362,7 @@ body {
   padding: 0;
   margin-left: 20px;
   position: absolute;
-  top: 75%;
+  top: 61%;
 }
 
 .log-text ul {
