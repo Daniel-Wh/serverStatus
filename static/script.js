@@ -229,7 +229,7 @@ async function getUpdate() {
 
 const updateTemp = () => {
   temperature.innerText = state.temp.temp + `° F`
-  humidity.innerText = state.temp.hum + `%`
+  humidity.innerText = state.temp.hum + ` %`
   console.log(parseFloat(state.temp.temp))
   if(parseFloat(state.temp.temp) > 80.0){
     temperature.classList.remove("good-temp")
