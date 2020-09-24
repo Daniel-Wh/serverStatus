@@ -19,12 +19,6 @@ const humidity = document.getElementById("humidity")
 
 
 const server_ports = ["80", "139", "443", "3389", "8080", "8443"];
-
-let state = {
-}
-
-
-
 const getFullDate = ()=>{
   const now = new Date();
   const days = [
@@ -78,31 +72,24 @@ const getFullDate = ()=>{
   
   return fullDate = `${dayName} the ${day} of ${month} ${now.getFullYear()} ${time}`;
 }
-
-let servers = [
-  "view.clearcube.com",
-  "cctaddc01.clearcube.local",
-  "m1.clearcube.local",
-  "m1-rds.clearcube.local",
-  "172.16.1.11",
-  "172.16.1.12",
-  "8.8.8.8",
-];
-
-let serverElements = [];
-
-let statuses = [];
-let port_stats;
+let state = {
+  servers: [],
+  statuses: [],
+  serverElements: [],
+  port_stats: [],
+  temp: '',
+  hum: ''
+}
 
 async function loadServers() {
   dateHeader.innerText = getFullDate();
-  servers = [];
-  serverElements =[]
+  state.servers = [];
+  state.serverElements =[]
   serverList.innerHTML = "";
   await fetch("/servers", { method: "GET" })
     .then((response) => response.json())
     .then((data) => {
-      servers = data.servers;
+      state.servers = data.servers;
       state.temp = data.temp
       updateServerUI();
       addServerElEvents();
@@ -113,32 +100,30 @@ async function loadServers() {
 
 async function updateServerUI() {
   
-  servers.forEach((val, index) => {
+  state.servers.forEach((val, index) => {
     const markup = `<div class="server-remove" id="server-${index}"><li id="${index}">${val}</li><span id="span-${index}">⨉</span></div>`;
     serverList.insertAdjacentHTML("beforeend", markup);
     const serverEl = document.getElementById(index);
-    serverElements.push(serverEl);
+    state.serverElements.push(serverEl);
   });
   await fetch("/update", { method: "GET" })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data.text_logs)
       state.textLogs = data.text_logs
       updateTextLogs()
-      port_stats = data.ports;
+      state.port_stats = data.ports;
       state.temp = data.temp
       updateStatusList(data.statuses);
     });
 
-    
-  serverElements.forEach((server) => {
+  state.serverElements.forEach((server) => {
     const serverRemoveSpan = document.getElementById(`span-${server.id}`);
     
     server.addEventListener("mouseover", () => {
       document.getElementById(server.id).classList.toggle("server-focus");
       state.serverIndex = server.id
       serverWarningText.innerText = `Are you sure you want to remove: ${
-        servers[state.serverIndex]
+        state.servers[state.serverIndex]
       }`;
       document.getElementById(`span-${server.id}`).style.display = "block";
     });
@@ -152,6 +137,7 @@ async function updateServerUI() {
     serverRemoveSpan.addEventListener("click", () => {
       removeWarningContainer.classList.toggle("show");
     });
+    console.log(server)
   });
 }
 
@@ -199,7 +185,7 @@ async function removeServer() {
 
   await fetch("/removeServer", {
     method: "POST",
-    body: JSON.stringify({ ip: "" + servers[state.serverIndex] }),
+    body: JSON.stringify({ ip: "" + state.servers[state.serverIndex] }),
     headers: {
       "Content-Type": "application/json",
       // 'Content-Type': 'application/x-www-form-urlencoded',
@@ -218,7 +204,7 @@ async function getUpdate() {
   await fetch("/update", { method: "GET" })
     .then((response) => response.json())
     .then((data) => {
-      port_stats = data.ports;
+      state.port_stats = data.ports;
       state.textLogs = data.text_logs
       state.temp = data.temp
       updateStatusList(data.statuses);
@@ -270,8 +256,9 @@ window.addEventListener("load", loadServers);
 // set up event listeners for server list
 
 const addServerElEvents = () => {
-  serverElements.forEach((val) => {
+  state.serverElements.forEach((val) => {
     val.addEventListener("click", () => {
+      console.log(val.id)
       createModal(val.id);
     });
   });
@@ -282,7 +269,8 @@ const createModal = (index) => {
                   <ul>
                   <li>Ports</li>
                     `;
-  port_stats[index].forEach((val, index) => {
+  console.log(state.port_stats[index])
+  state.port_stats[index].forEach((val, index) => {
     markUp +=
       `<li ` +
       (val === 0 ? `class="dead-port"` : `class="active-port"`) +
@@ -311,7 +299,7 @@ closeAddServerModal.addEventListener("click", () => {
 serverSubmit.addEventListener("click", () => {
   const input = serverInput.value;
   if (input) {
-    servers.push(input);
+    state.servers.push(input);
     addServerReq(input);
   }
 
