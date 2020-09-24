@@ -73,15 +73,33 @@ def update_text_log(server_name, message):
     os.rename("dummy.txt", "Status Log.txt")
 
 
+def get_current_temp():
+    with open("readings.txt", "r") as f:
+        for line in f:
+            pass
+        last_line = line
+    if last_line is not None:
+        date = last_line.split("T")[0]
+        temp_and_hum = last_line.split("T")[1].strip(" ")
+        temp = temp_and_hum.split(" ")[0]
+        hum = temp_and_hum.split(" ")[1]
+        return {"date": date, "temp": temp, "hum": hum}
+    else:
+        return 0
+
+
 @app.route('/servers', methods=['GET'])
 def return_servers():
     server_list = Server.get_current_servers()
     server_ips = []
+    temp = get_current_temp()
+    print(temp)
     for server in server_list:
         server_ips.append(server.get_ip())
 
     return jsonify({
         "servers": server_ips,
+        "temp": temp
     }), 200
 
 
@@ -92,6 +110,7 @@ def update_front_end():
     log_texts = []
     server_list = Server.get_current_servers()
     file = open("Status Log.txt", "r")
+    current_temp = get_current_temp()
     for i, line in enumerate(file):
         if i < 16:
             log_texts.append(line)
@@ -105,7 +124,8 @@ def update_front_end():
     return jsonify({
         "statuses": statuses,
         "ports": port_stats,
-        "text_logs": log_texts
+        "text_logs": log_texts,
+        "temp": current_temp
     })
 
 
@@ -172,6 +192,7 @@ def reset_backend():
         return 'removed all servers from database and reset', 200
     except:
         return 500
+
 
 # ------------------------------------------------------------------- #
 # ------------- Server Class and database integration --------------- #

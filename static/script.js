@@ -13,6 +13,9 @@ const removeWarningContainer = document.getElementById("remove-container");
 const yesRemoveServer = document.getElementById("yes-remove-server");
 const noRemoveServer = document.getElementById("no-remove-server");
 const logTextList = document.getElementById("log-text-list")
+const tempSection = document.getElementById("tempSection")
+const temperature = document.getElementById("temperature")
+const humidity = document.getElementById("humidity")
 
 
 const server_ports = ["80", "139", "443", "3389", "8080", "8443"];
@@ -100,8 +103,10 @@ async function loadServers() {
     .then((response) => response.json())
     .then((data) => {
       servers = data.servers;
+      state.temp = data.temp
       updateServerUI();
       addServerElEvents();
+      updateTemp();
     });
   
 }
@@ -121,6 +126,7 @@ async function updateServerUI() {
       state.textLogs = data.text_logs
       updateTextLogs()
       port_stats = data.ports;
+      state.temp = data.temp
       updateStatusList(data.statuses);
     });
 
@@ -213,8 +219,17 @@ async function getUpdate() {
     .then((response) => response.json())
     .then((data) => {
       port_stats = data.ports;
+      state.textLogs = data.text_logs
+      state.temp = temp
       updateStatusList(data.statuses);
+      updateTextLogs()
+      updateTemp()
     });
+}
+
+const updateTemp = () => {
+  temperature.innerText = state.temp.temp
+  humidity.innerText = state.temp.hum
 }
 
 const updateStatusList = (serverStatus) => {
