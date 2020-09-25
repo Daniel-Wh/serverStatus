@@ -1,3 +1,6 @@
+import json
+
+from bokeh.embed import json_item
 from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -7,6 +10,8 @@ from threading import Timer
 from pythonping import ping
 from datetime import datetime as dt
 import os
+from bokeh.plotting import figure
+from bokeh.models import ColumnDataSource
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
@@ -87,6 +92,20 @@ def get_current_temp():
     else:
         return 0
 
+
+def get_temp_info_for_chart():
+    data = {"date": [], "temp": [], "hum": []}
+    with open("readings.txt", "r") as f:
+        for line in f:
+            date = line.split("T")[0].split(' ')
+            date_time = dt(int(date[0]),int(date[1]), int(date[2]), int(date[3]), int(date[4]))
+            data["date"].append(date_time)
+            temp_and_hum = line.split("T")[1].strip(" ")
+            temp = temp_and_hum.split(" ")[0]
+            hum = temp_and_hum.split(" ")[1]
+            data["temp"].append(temp)
+            data["hum"].append(hum)
+    return data
 
 @app.route('/servers', methods=['GET'])
 def return_servers():
@@ -193,6 +212,20 @@ def reset_backend():
     except:
         return 500
 
+
+@app.route('/getchart', methods=['GET'])
+def chart_generator():
+    data = get_temp_info_for_chart()
+    chart_data = {
+        'date': data["date"],
+        "temp": data["temp"],
+        "hum": data["hum"]
+    }
+    source = ColumnDataSource(chart_data)
+    line = figure(plot_width=700, plot_height=500, x_axis_type='datetime')
+    line.line(y='temp', x='date', color='blue', source=source)
+    item = json.dumps(json_item(line, "tempChart"))
+    return item, 200
 
 # ------------------------------------------------------------------- #
 # ------------- Server Class and database integration --------------- #
