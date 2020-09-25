@@ -12,6 +12,7 @@ from datetime import datetime as dt
 import os
 from bokeh.plotting import figure
 from bokeh.models import ColumnDataSource, HoverTool
+import pandas as pd
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
@@ -217,17 +218,24 @@ def reset_backend():
 @app.route('/getchart', methods=['GET'])
 def chart_generator():
     data = get_temp_info_for_chart()
+    df = pd.DataFrame(data=data)
+    rolling_mean_temp = df['temp'].rolling(window=20).mean()
+    rolling_hum_mean = df['hum'].rolling(window=20).mean()
     chart_data = {
         'date': data["date"],
         "temp": data["temp"],
-        "hum": data["hum"]
+        "hum": data["hum"],
+        "temp_mean": rolling_mean_temp,
+        'hum_mean': rolling_hum_mean
     }
     source = ColumnDataSource(chart_data)
-    line = figure(title="Historical Server Room Temp and Humidity", plot_width=600, plot_height=450,
+    line = figure(title="Historical Server Room Temp and Humidity", plot_width=700, plot_height=500,
                   x_axis_type='datetime')
-    temp_line = line.line(y='temp', x='date', color='blue', source=source)
+    temp_line = line.line(y='temp', x='date', color='blue', line_alpha=0.2, line_width=1, source=source)
+    line.line(y='temp_mean', x='date', color='magenta', line_width=2, source=source)
+    line.line(y='hum_mean', x='date', color='magenta', source=source)
+    line.line(y='hum', x='date', color='red', line_alpha=0.2, line_width=1, source=source)
 
-    line.line(y='hum', x='date', color='red', source=source)
     line.add_tools(HoverTool(
         renderers=[temp_line],
         tooltips=[
@@ -318,7 +326,7 @@ class Server(db.Model):
         for port in server_ports:
             # print("trying port " + str(port) + " at " + self.ip)
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.settimeout(0.1)
+            s.settimeout(5)
             try:
                 s.connect((self.ip, port))
             except:

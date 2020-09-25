@@ -200,7 +200,7 @@ async function removeServer() {
 
 async function getUpdate() {
   statusList.innerHTML = "";
-  dateHeader.innerText = fullDate;
+  dateHeader.innerText = getFullDate();
   await fetch("/update", { method: "GET" })
     .then((response) => response.json())
     .then((data) => {
