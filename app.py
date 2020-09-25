@@ -11,7 +11,7 @@ from pythonping import ping
 from datetime import datetime as dt
 import os
 from bokeh.plotting import figure
-from bokeh.models import ColumnDataSource
+from bokeh.models import ColumnDataSource, HoverTool
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
@@ -98,7 +98,7 @@ def get_temp_info_for_chart():
     with open("readings.txt", "r") as f:
         for line in f:
             date = line.split("T")[0].split(' ')
-            date_time = dt(int(date[0]),int(date[1]), int(date[2]), int(date[3]), int(date[4]))
+            date_time = dt(int(date[0]), int(date[1]), int(date[2]), int(date[3]), int(date[4]))
             data["date"].append(date_time)
             temp_and_hum = line.split("T")[1].strip(" ")
             temp = temp_and_hum.split(" ")[0]
@@ -106,6 +106,7 @@ def get_temp_info_for_chart():
             data["temp"].append(temp)
             data["hum"].append(hum)
     return data
+
 
 @app.route('/servers', methods=['GET'])
 def return_servers():
@@ -222,10 +223,22 @@ def chart_generator():
         "hum": data["hum"]
     }
     source = ColumnDataSource(chart_data)
-    line = figure(plot_width=700, plot_height=500, x_axis_type='datetime')
-    line.line(y='temp', x='date', color='blue', source=source)
-    item = json.dumps(json_item(line, "tempChart"))
-    return item, 200
+    line = figure(title="Historical Server Room Temp and Humidity", plot_width=600, plot_height=450,
+                  x_axis_type='datetime')
+    temp_line = line.line(y='temp', x='date', color='blue', source=source)
+
+    line.line(y='hum', x='date', color='red', source=source)
+    line.add_tools(HoverTool(
+        renderers=[temp_line],
+        tooltips=[
+                  ('(date, temperature)', '(@date{%F} @date{%T}, @temp)')
+                  ],
+        formatters={'@date': 'datetime'},
+        line_policy='nearest',
+        mode='mouse'
+    ))
+    return json.dumps(json_item(line, "tempChart")), 200
+
 
 # ------------------------------------------------------------------- #
 # ------------- Server Class and database integration --------------- #
@@ -333,7 +346,7 @@ class Server(db.Model):
                 if self.is_up:
                     self.last_state_change = dt.now()
                     update_text_log(self.ip + "", "went down")
-            # file_log.write(self.ip + " went down at {}\n".format(self.last_state_change.strftime("%b %d %Y %H:%M")))
+                # file_log.write(self.ip + " went down at {}\n".format(self.last_state_change.strftime("%b %d %Y %H:%M")))
                 self.is_up = False
                 self.status_message = "Dead since " + self.last_state_change.strftime("%b %d %Y %H:%M")
                 self.save_to_db()
@@ -341,7 +354,7 @@ class Server(db.Model):
                 if not self.is_up:
                     self.last_state_change = dt.now()
                     update_text_log(self.ip + "", "came back")
-            # file_log.write(self.ip + " came back at {}\n".format(self.last_state_change.strftime("%b %d %Y %H:%M")))
+                # file_log.write(self.ip + " came back at {}\n".format(self.last_state_change.strftime("%b %d %Y %H:%M")))
                 self.is_up = True
                 self.status_message = "Alive since " + self.last_state_change.strftime("%b %d %Y %H:%M")
                 self.save_to_db()
