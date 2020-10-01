@@ -70,7 +70,7 @@ def update_text_log(server_name, message):
     file_log = open("Status Log.txt", "r")
     dummy_file = open("dummy.txt", "w")
     dummy_file.writelines("Server {} {} at {}\n".format(server_name, message,
-                                                        current_time.strftime("%b %d %Y %H:%M")))
+                                                        dt.now().strftime("%b %d %Y %H:%M")))
     for line in file_log:
         dummy_file.write(line)
     dummy_file.close()
