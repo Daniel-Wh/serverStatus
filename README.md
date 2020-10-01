@@ -17,8 +17,10 @@ Added a text file logging system <br/>
 Updated UI to reflect which ports are up <br/>
 Added sqlite database for server info <br/>
 Added endpoints to remove and add server <br/>
+Added endpoint to reset (primarily for testing)<br/>
 Added temperature and humidity logging system from node.js for pi 4, application will ultimately be placed in server room and will monitor temps <br/>
-Dynamically adjust which servers are being monitored at UI
+Dynamically adjust which servers are being monitored at UI <br/>
+Update UI with temp history, current temp of server room, and humidity. Created endpoints to serve Bokeh interactive visualization
 <br />
 
 ## Client requests
@@ -28,6 +30,6 @@ Visual log of uptime and recent changes on page (clickable to expand, not necess
 <br />
 database to maintain historical downtime information on servers
 <br />
-Update UI with temp history, current temp of server room, and humidity. Create endpoints to serve Bokeh interactive visualization (potentially paired with external weather data to compare temps)
-<br />
-Look for hooks into freeNAS
+Look for hooks into freeNAS logging to generate text on page of most recent events in data backups
+<br /> 
+dockerize instead of using forever
